@@ -68,13 +68,9 @@ class OrderItem(models.Model):
     
     
 class Address(models.Model):
-    flat_no = models.CharField(max_length=255)
-    building_name = models.CharField(max_length=255)
-    locality = models.CharField(max_length=255)
+    street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
-    state = models.CharField(max_length=255)
-    pin_code = models.CharField(max_length=6)
-    country = models.CharField(max_length=255)
+    zip_code = models.CharField(max_length=20, null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     
 class Cart(models.Model):
