@@ -6,9 +6,9 @@
     <h1>Hello, {{ details.first_name }} {{ details.last_name }}</h1>
 
     <ul>
-        {% for order in orders %}
+        {% for query in queryset %}
         <li>
-            {{order.id}} - {{order.customer.first_name}}
+            {{query.id}} - {{query.first_name}} - Orders: {{query.orders_count}}
         </li>
         {% endfor %}
     </ul>
