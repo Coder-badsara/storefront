@@ -4,4 +4,14 @@
 
 {% block content %}
     <h1>Hello, {{ details.first_name }} {{ details.last_name }}</h1>
+
+    <ul>
+        {% for product in products %}
+        <li>
+            {{product.title}}
+        </li>
+        {% endfor %}
+    </ul>
+
+
 {% endblock %}
