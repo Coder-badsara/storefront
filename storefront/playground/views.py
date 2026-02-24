@@ -1,5 +1,7 @@
 from django.shortcuts import render 
-from store.models import Product
+from store.models import Order
+
+
 
 # Create your views here.
 def hello(request):
@@ -7,5 +9,5 @@ def hello(request):
         'first_name': 'Umesh',
         'last_name': 'Badsara',
     }
-    products = Product.objects.filter(title__icontains='coffee')
-    return render(request, 'hello.html', {'details': details , 'products':products})
+    orders = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
+    return render(request, 'hello.html', {'details': details , 'orders':orders})
