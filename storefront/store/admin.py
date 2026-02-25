@@ -9,6 +9,7 @@ from . import models
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['title', 'price', 'inventory_status', 'collection']
     list_editable = ['price']
+    list_filter = ['collection', 'last_updated']
     list_per_page = 10
 
     @admin.display(ordering='inventory')
@@ -22,6 +23,9 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'membership', 'order_count']
     list_editable = ['membership']
     list_per_page = 10
+    list_ordering = ['first_name', 'last_name']
+    search_fields = ['first_name__istartswith', 'last_name__istartswith']
+    
     
     @admin.display(ordering = 'order_count')
     def order_count(self, customer):
