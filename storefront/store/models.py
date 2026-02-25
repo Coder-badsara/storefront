@@ -3,7 +3,9 @@ from django.db import models
 class Promotion(models.Model):
     description = models.CharField(max_length=255)
     discount = models.FloatField()
-
+    
+    def __str__(self):
+        return self.description
 
 class Collection(models.Model):
     title = models.CharField(max_length=255)
@@ -59,12 +61,18 @@ class Order(models.Model):
     placed_at = models.DateTimeField(auto_now_add=True)
     payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    
+    def __str__(self):
+        return f"Order {self.id}"
  
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+    
+    def __str__(self):
+        return f"{self.order.id} - {self.quantity} Unit of {self.product.title}"
     
     
 class Address(models.Model):
@@ -73,10 +81,19 @@ class Address(models.Model):
     zip_code = models.CharField(max_length=20, null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     
+    def __str__(self):
+        return f"{self.street}, {self.city}"
+    
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Cart {self.id}"
     
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField()
+    
+    def __str__(self):
+        return f"{self.quantity} Unit of {self.product.title}"
