@@ -2,13 +2,23 @@ from decimal import Decimal
 from .models import Product , Collection
 from rest_framework import serializers
 
-class ProductSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    title = serializers.CharField(max_length = 255)
-    price = serializers.DecimalField(max_digits=6, decimal_places=2)
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'description', 'slug', 'price', 'price_with_tax', 'inventory', 'collection']
+
+    # --> this will duplicate the variables i.e also declared here and also in models
+    # id = serializers.IntegerField()
+    # title = serializers.CharField(max_length = 255)
+    # price = serializers.DecimalField(max_digits=6, decimal_places=2)
     price_with_tax = serializers.SerializerMethodField(method_name= 'calculate_tax')
-    collection = serializers.StringRelatedField()
+    # collection = serializers.StringRelatedField()
     
     def calculate_tax(self, product: Product):
         final_value = product.price * Decimal(1.1)
         return final_value
+    
+class CollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Collection
+        fields = ['id', 'title']     
