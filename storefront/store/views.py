@@ -1,12 +1,54 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Product , Collection 
 from .serializers import ProductSerializer , CollectionSerializer
 
-# Create your views here.
+# ---> class based view 
+
+class ProductList(APIView):
+    def get(self, request):
+        product_list = Product.objects.select_related('collection').all()
+        serializer = ProductSerializer(product_list, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = ProductSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class ProductDetail(APIView):
+    
+    def get(self, request, id):
+        product = get_object_or_404(Product, pk=id)
+        serializer = ProductSerializer(product) 
+        return Response(serializer.data)
+    
+    def put(self, request, id):
+        product = get_object_or_404(Product, pk=id)
+        serializer = ProductSerializer(product, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def delete(self, request, id):
+        product = get_object_or_404(Product, pk=id)
+        if product.orderitems.count() > 0:
+            return Response({'error': 'Product cannot be deleted beacause it is associated with an order item.'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
+  
+
+
+
+
+# ---> function based view 
+
 @api_view(['GET', 'POST'])
 def product_list(request):
     if request.method == 'GET':
