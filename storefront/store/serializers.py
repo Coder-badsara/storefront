@@ -1,5 +1,5 @@
 from decimal import Decimal
-from .models import Product , Collection
+from .models import Product , Collection , Review
 from rest_framework import serializers
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -24,3 +24,8 @@ class CollectionSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'product_count']   
     
     product_count = serializers.IntegerField(read_only = True)  
+    
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'name', 'description', 'date', 'product']
